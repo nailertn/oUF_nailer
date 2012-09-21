@@ -212,6 +212,13 @@ local function update_auras(container, cache, filtered)
 	return visible
 end
 
+local function resize_container(container, visible)
+	local width = min(container.per_row, visible) * (container.size + container.spacing) - container.spacing
+	local height = ceil(visible / container.per_row) * (container.size + container.spacing) - container.spacing
+	
+	container:SetSize(width, height)
+end
+
 local function update_container(container, cache)
 	local filtered
 	
