@@ -219,6 +219,23 @@ local function resize_container(container, visible)
 	container:SetSize(width, height)
 end
 
+local function anchor_buttons(container, from, to)
+	local size = container.size + container.spacing
+	local anchor = container.anchor
+	local dir_x = container.grow_x == 'right' and 1 or -1
+	local dir_y = container.grow_y == 'up' and 1 or -1
+	local per_row = container.per_row
+
+	for index = from, to do
+		local button = container[index]
+		
+		local col = (index - 1) % per_row
+		local row = floor((index - 1) / per_row)
+
+		button:SetPoint(anchor, col * size * dir_x, row * size * dir_y)
+	end
+end
+
 local function update_container(container, cache)
 	local filtered
 	
