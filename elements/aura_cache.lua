@@ -34,6 +34,8 @@ local function scan_auras(cache, unit, filter)
 end
 
 local function update(object, event, unit)
+	if not object:IsShown() then return end
+	
 	for k in next, directory do
 		directory[k] = nil
 	end
