@@ -220,33 +220,40 @@ end
 
 local function update_auras(container, cache, is_filtered)
 	local index = 1
+	local hidden = 0
 	local visible = is_filtered and 1 or 0
 	
 	while visible < container.max do
 		local entry = cache[index]
+		local button = container[visible + hidden + 1]
 		
-		if entry and (not filtered or not entry.filtered) then
-			button = button or create_button(container)
-			
-			if container.debuff_coloring then
-				local color = DebuffTypeColor[entry.debuff_type] or container.border_color
-				button.border:SetVertexColor(color.r, color.g, color.b)
+		if entry then
+			if not is_filtered or not entry.is_filtered then
+				button = button or create_button(container)
+				
+				if container.debuff_coloring then
+					local color = DebuffTypeColor[entry.debuff_type] or container.border_color
+					button.border:SetVertexColor(color.r, color.g, color.b)
+				end
+				
+				button.icon:SetTexture(entry.icon)
+				
+				button.count:SetText((entry.count or 0) > 1 and entry.count or nil)
+				
+				if entry.duration > 0 then
+					start_timer(button, entry.expiration)
+				else
+					stop_timer(button)
+				end
+				
+				button:Show()
+				visible = visible + 1
 			end
-			
-			button.icon:SetTexture(entry.icon)
-			
-			button.count:SetText((entry.count or 0) > 1 and entry.count or nil)
-			
-			if entry.duration > 0 then
-				to_update[button] = entry.expiration
-			end
-			
-			button:Show()
-			
-			visible = visible + 1
 		elseif button then
-			to_update[button] = nil
+			stop_timer(button)
+			
 			button:Hide()
+			hidden = hidden + 1
 		else
 			break
 		end
@@ -355,7 +362,7 @@ local function disable_container(object, container)
 	container:Hide()
 	
 	for _, button in ipairs(container) do
-		to_update[button] = nil
+		stop_timer(button)
 	end
 	
 	return container
