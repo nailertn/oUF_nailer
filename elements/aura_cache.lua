@@ -33,7 +33,7 @@ local function scan_auras(cache, unit, filter)
 	end
 end
 
-local function update(object, unit)
+local function update(object, event, unit)
 	for k in next, directory do
 		directory[k] = nil
 	end
@@ -42,7 +42,7 @@ local function update(object, unit)
 	scan_auras(debuffs, unit, "HARMFUL")
 	
 	for func in next, callback[object] do
-		func(object, aura_cache)
+		func(object, event, aura_cache)
 	end
 end
 
@@ -55,7 +55,7 @@ aura_cache:SetScript("OnUpdate", function(self, elapsed)
 	
 	for object, unit in next, throttle do
 		throttle[object] = nil
-		update(object, unit)
+		update(object, 'UNIT_AURA', unit)
 	end
 end)
 
@@ -68,7 +68,7 @@ end
 function aura_cache.force_update(object, event)
 	if not object.unit then return end
 	throttle[object] = nil
-	return update(object, object.unit)
+	return update(object, event or 'force_update', object.unit)
 end
 
 function aura_cache.register_callback(object, func)
