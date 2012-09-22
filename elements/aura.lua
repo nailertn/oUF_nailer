@@ -5,6 +5,18 @@ local GetTime = GetTime
 
 local start_timer, stop_timer
 do
+	local function enable_accented(button)
+		local container = button.__owner
+		button.time:SetFont(container.font, container.font_size * 2, container.font_flags)
+		button.is_accented = true
+	end
+	
+	local function disable_accented(button)
+		local container = button.__owner
+		button.time:SetFont(container.font, container.font_size, container.font_flags)
+		button.is_accented = false
+	end
+	
 	local function update_timer(button, expiration)
 		local value = expiration - NOW
 		
@@ -16,12 +28,9 @@ do
 			button.time:SetText(ceil(value))
 		elseif value > 0 then
 		
-			if not button.large_font then
-				button.large_font = true
-				
-				local font, font_size, font_flags = button.time:GetFont()
-				button.time:SetFont(font, font_size * 2, font_flags)
-				button.time:SetPoint("bottom", 1, -1)			
+			if button.accent_expiring then
+				button.accent_expiring = nil
+				enable_accented(button)
 			end
 			
 			if value > 6 then
@@ -35,7 +44,6 @@ do
 			stop_timer(button)
 		end
 	end
-
 
 	local to_update = {}
 	local elapsed = 0
@@ -59,6 +67,14 @@ do
 	end)
 	
 	function start_timer(button, expiration)
+		if button.__owner.accent_expiring then
+			if button.is_accented then
+				disable_accented(button)
+			end
+			
+			button.accent_expiring = true			
+		end
+		
 		to_update[button] = expiration
 		update_frame:Show()
 		update_timer(button, expiration)
