@@ -287,7 +287,7 @@ local function anchor_buttons(container, from, to)
 	end
 end
 
-local function update_container(container, cache)
+local function update_container(container, event, cache)
 	local filtered
 	
 	if container.filter and not container.pause_filtering then
@@ -314,15 +314,15 @@ local function update_container(container, cache)
 	end
 end
 
-local function update_object(object, cache)
+local function update_object(object, event, cache)
 	NOW = GetTime()
 	
 	if object.buffs then
-		update_container(object.buffs, cache.buffs)
+		update_container(object.buffs, event, cache.buffs)
 	end
 	
 	if object.debuffs then
-		update_container(object.debuffs, cache.debuffs)
+		update_container(object.debuffs, event, cache.debuffs)
 	end
 end
 
@@ -373,7 +373,7 @@ local function enable_object(object)
 	local debuffs = object.debuffs and enable_container(object, object.debuffs, 'HARMFUL')
 	
 	if buffs or debuffs then
-		layout.aura_cache:register_callback(object, update_object)
+		layout.aura_cache.register_callback(object, update_object)
 	end
 end
 
@@ -382,7 +382,7 @@ local function disable_object(object)
 	local debuffs = object.debuffs and disable_container(object, object.debuffs)
 	
 	if buffs or debuffs then
-		layout.aura_cache:unregister_callback(object, update_object)
+		layout.aura_cache.unregister_callback(object, update_object)
 	end
 end
 
