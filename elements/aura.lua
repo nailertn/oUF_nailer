@@ -86,6 +86,41 @@ do
 end
 
 local font, font_size, font_flags = "Fonts\\FRIZQT__.TTF", 10
+ 
+local function on_update_container(self, elapsed)
+	
+	local exit_time = self.exit_time
+	if exit_time then
+		if exit_time - elapsed < 0 then
+			return layout.aura_cache.force_update(self.__owner, 'exit filtered')
+		end
+		self.exit_time = exit_time - elapsed
+	end
+	
+	if self.pause_filtering then
+		if self:IsMouseOver() then
+			self.mouseout_time = 0
+		else
+			self.mouseout_time = self.mouseout_time + elapsed
+			if self.mouseout_time > 1 then
+				self.mouseover_time = 0
+				self.pause_filtering = false
+				return layout.aura_cache.force_update(self.__owner, 'collapse filtered')
+			end
+		end
+	else
+		if self[1]:IsMouseOver() then
+			self.mouseover_time = self.mouseover_time + elapsed
+			if self.mouseover_time > 0.25 then
+				self.mouseout_time = 0
+				self.pause_filtering = true
+				return layout.aura_cache.force_update(self.__owner, 'expand filtered')
+			end
+		else
+			self.mouseover_time = 0
+		end
+	end
+end
 
 local function create_button(container)
 	container.created_buttons = (container.created_buttons or 0) + 1
@@ -126,21 +161,7 @@ local function create_button(container)
 	return button
 end
 
-local function mouseover_tracking(self, elapsed)
-	self.elapsed = self.elapsed or 0 + elapsed
-	if self.elapsed < 0.5 then return end
-	self.elapsed = 0
 	
-	if self:IsMouseOver() then
-		self.mouseout_time = 0
-	else
-		self.mouseout_time = self.mouseout_time + elapsed
-		if self.mouseout_time > self.mouseout_delay then
-			self:SetScript('OnUpdate', nil)
-			layout.aura_cache:force_update(self.__owner)
-		end
-	end
-end
 
 local function sort_auras(a, b)	
 	if a.duration == 0 then
