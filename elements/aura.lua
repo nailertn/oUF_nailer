@@ -85,8 +85,6 @@ do
 	end
 end
 
-local font, font_size, font_flags = "Fonts\\FRIZQT__.TTF", 10
- 
 local function on_update_container(self, elapsed)
 	
 	local exit_time = self.exit_time
@@ -150,11 +148,11 @@ local function create_button(container)
 	
 	button.time = button:CreateFontString(nil, 'OVERLAY')
 	button.time:SetPoint('center')
-	button.time:SetFont(font, font_size, font_flags)
+	button.time:SetFont(container.font, container.font_size, container.font_flags)
 	
 	button.count = button:CreateFontString(nil, 'OVERLAY')
 	button.count:SetPoint('topright', -4, -4)
-	button.count:SetFont(font, font_size, font_flags)
+	button.count:SetFont(container.font, container.font_size, container.font_flags)
 	
 	tinsert(container, button)
 	
@@ -320,10 +318,10 @@ local defaults = setmetatable({
 	grow_y				= "up",
 	max 				= 24,
 	per_row				= 8,
-	font				= font,
-	font_size			= font_size,
-	font_flags			= font_flags,
 	border_color		= { 1,1,1 },
+	font				= "Fonts\\FRIZQT__.TTF",
+	font_size			= 10,
+	font_flags			= nil,
 	debuff_coloring		= true,
 	sort				= sort_auras,
 	filter				= true,
