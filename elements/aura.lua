@@ -159,7 +159,18 @@ local function create_button(container)
 	return button
 end
 
+local function enable_filter_button(container, num_filtered)
+	local button = container[1] or create_button(container)
 	
+	if container.debuff_coloring then
+		button.border:SetVertexColor(container.color.r, container.color.g, container.color.b)
+	end
+	
+	button.icon:SetTexture('Interface\\Icons\\Inv_misc_grouplooking')
+	button.count:SetText(num_filtered)
+	button.time:SetText()
+	button:Show()
+end
 
 local function sort_auras(a, b)	
 	if a.duration == 0 then
