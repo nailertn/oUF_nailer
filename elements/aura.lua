@@ -348,11 +348,12 @@ defaults.__index = defaults
 
 local function enable_container(object, container, type)
 	setmetatable(container, defaults)
+	container.__owner = object
+	container.created_buttons = 0
+	container.anchored_buttons = 0
+	container.visible = 0
 	container.pause_filtering = nil
-	
-	if type == 'HELPFUL' then
-		container.debuff_coloring = nil
-	end
+	container.debuff_coloring = type == 'HARMFUL'
 	
 	return container
 end
