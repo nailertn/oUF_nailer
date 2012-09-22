@@ -288,16 +288,25 @@ local function anchor_buttons(container, from, to)
 end
 
 local function update_container(container, event, cache)
-	local filtered
-	
-	if container.filter and not container.pause_filtering then
-		filtered = filter_auras(container, cache)
-	end
-	
-	if filtered and not container.filter_button then
-		enable_filter_button(container)
-	elseif not filtered and container.filter_button then
-		disable_filter_button(container)
+	if container.filtering_enabled then
+		if container.pause_filtering then
+			container.has_filtered, container.exit_time = false, false
+		else
+			container.has_filtered, container.exit_time = filter_auras(container, cache)
+		end
+		
+		if container.has_filtered then
+			enable_filter_button(container, container.has_filtered)
+		end
+		
+		if container.pause_filtering or container.has_filtered then
+			if not container:GetScript('OnUpdate') then
+				container:SetScript('OnUpdate', on_update_container)
+				container.mouseover_time, container.mouseout_time = 0, 0
+			end
+		else
+			container:SetScript('OnUpdate', nil)
+		end
 	end
 	
 	if container.sort then
@@ -306,11 +315,24 @@ local function update_container(container, event, cache)
 	
 	local visible = update_auras(container, cache, container.has_filtered)
 	
-	resize_container(container, visible)
+	if container.filtering_enabled and (event == 'OnShow' or (container.visible == 0 and visible ~= 0)) then
+		container.mouseover_time, container.mouseout_time = 0, 0
+	end
 	
-	if container.created_buttons > container.anchored_buttons then
-		anchor_buttons(container.anchored_buttons + 1, container.created_buttons)
-		container.created_buttons = container.anchored_buttons
+	if container.anchored_buttons < container.created_buttons then
+		anchor_buttons(container, container.anchored_buttons + 1, container.created_buttons)
+		container.anchored_buttons = container.created_buttons
+	end
+	
+	if container.visible ~= visible then
+		container.visible = visible
+		resize_container(container, visible)
+	end
+	
+	if visible == 0 then
+		container:Hide()
+	else
+		container:Show()
 	end
 end
 

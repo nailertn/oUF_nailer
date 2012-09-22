@@ -18,7 +18,7 @@ local function scan_auras(cache, unit, filter)
 	while true do
 		local entry = cache[index] or GetTable(cache, index)
 		
-		entry.name, _, entry.icon, entry.count, entry.debuff_type, entry.duration, entry.expiration, entry.caster, _, _, entry.id = UnitAura(unit, index, filter)
+		entry.name, _, entry.icon, entry.count, entry.debuff_type, entry.duration, entry.expiration, entry.caster, _, entry.consolidate, entry.id = UnitAura(unit, index, filter)
 		if not entry.name then break end
 		
 		entry.index = index
