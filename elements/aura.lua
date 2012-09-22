@@ -121,6 +121,19 @@ local function on_update_container(self, elapsed)
 	end
 end
 
+local function update_tooltip(button)
+	GameTooltip:SetUnitAura(button.__owner.__owner.unit, button.index, button.__owner.type)
+end
+
+local function on_enter(button)
+	GameTooltip:SetOwner(button, "ANCHOR_TOPLEFT")
+	update_tooltip(button)
+end
+
+local function on_leave(button)
+	GameTooltip:Hide()
+end
+
 local function create_button(container)
 	container.created_buttons = (container.created_buttons or 0) + 1
 	
@@ -156,6 +169,10 @@ local function create_button(container)
 	button.count = button:CreateFontString(nil, 'OVERLAY')
 	button.count:SetPoint('topright', -4, -4)
 	button.count:SetFont(container.font, container.font_size, container.font_flags)
+	
+	button.UpdateTooltip = update_tooltip
+	button:SetScript('OnEnter', on_enter)
+	button:SetScript('OnLeave', on_leave)
 	
 	return button
 end
@@ -245,6 +262,8 @@ local function update_auras(container, cache, is_filtered)
 				else
 					stop_timer(button)
 				end
+				
+				button.index = entry.index
 				
 				button:Show()
 				visible = visible + 1
@@ -371,6 +390,7 @@ defaults.__index = defaults
 local function enable_container(object, container, type)
 	setmetatable(container, defaults)
 	container.__owner = object
+	container.type = type
 	container.created_buttons = 0
 	container.anchored_buttons = 0
 	container.visible = 0
