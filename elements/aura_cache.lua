@@ -65,24 +65,24 @@ local function UNIT_AURA(object, event, unit)
 	return aura_cache:Show()
 end
 
-function aura_cache:force_update(object)
+function aura_cache.force_update(object, event)
 	if not object.unit then return end
 	throttle[object] = nil
 	return update(object, object.unit)
 end
 
-function aura_cache:register_callback(object, func)
+function aura_cache.register_callback(object, func)
 	callback[object] = callback[object] or {}
 	
 	if not next(callback[object]) then
 		object:RegisterEvent("UNIT_AURA", UNIT_AURA)
-		tinsert(object.__elements, self.force_update)
+		tinsert(object.__elements, aura_cache.force_update)
 	end
 	
 	callback[object][func] = true
 end
 
-function aura_cache:unregister_callback(object, func)
+function aura_cache.unregister_callback(object, func)
 	if not callback[object] then return end
 	
 	callback[object][func] = nil
@@ -91,7 +91,7 @@ function aura_cache:unregister_callback(object, func)
 		throttle[object] = nil
 		object:UnregisterEvent("UNIT_AURA", UNIT_AURA)
 		for i,f in next, object.__elements do
-			if f == self.force_update then
+			if f == aura_cache.force_update then
 				return tremove(object.__elements, i)
 			end
 		end
