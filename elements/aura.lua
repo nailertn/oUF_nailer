@@ -395,7 +395,7 @@ local function enable_container(object, container, type)
 	container.anchored_buttons = 0
 	container.visible = 0
 	container.pause_filtering = nil
-	container.debuff_coloring = type == 'HARMFUL'
+	container.debuff_coloring = container.debuff_coloring and type == 'HARMFUL'
 	
 	return container
 end
