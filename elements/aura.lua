@@ -44,16 +44,16 @@ do
 			stop_timer(button)
 		end
 	end
-
+	
 	local to_update = {}
-	local elapsed = 0
+	local total = 0
 	local frequency = 0.1
 		
 	local update_frame = CreateFrame'Frame'
-	update_frame:SetScript('OnUpdate', function(self, x)
-		elapsed = elapsed + x
-		if elapsed < frequency then return end
-		elapsed = 0
+	update_frame:SetScript('OnUpdate', function(self, elapsed)
+		total = total + elapsed
+		if total < frequency then return end
+		total = 0
 		
 		NOW = GetTime()
 		
@@ -82,6 +82,7 @@ do
 	
 	function stop_timer(button)
 		to_update[button] = nil
+		button.time:SetText()
 	end
 end
 
@@ -125,14 +126,16 @@ local function create_button(container)
 	
 	local button = CreateFrame('Button', nil, container)
 	button:SetSize(container.size, container.size)
+	button.__owner = container
+	tinsert(container, button)
 	
 	local background = button:CreateTexture(nil, 'BACKGROUND')
 	background:SetAllPoints()
 	background:SetTexture(0,0,0)
 	
 	button.border = button:CreateTexture(nil, 'BORDER')
-	button.border:Setpoint('topleft', 1, -1)
-	button.border:Setpoint('bottomright', -1, 1)
+	button.border:SetPoint('topleft', 1, -1)
+	button.border:SetPoint('bottomright', -1, 1)
 	button.border:SetTexture('Interface\\Buttons\\WHITE8X8')
 	button.border:SetVertexColor(1,1,1)
 	
@@ -154,8 +157,6 @@ local function create_button(container)
 	button.count:SetPoint('topright', -4, -4)
 	button.count:SetFont(container.font, container.font_size, container.font_flags)
 	
-	tinsert(container, button)
-	
 	return button
 end
 
@@ -172,7 +173,7 @@ local function enable_filter_button(container, num_filtered)
 	button:Show()
 end
 
-local function sort_auras(a, b)	
+local function sort_auras(a, b)
 	if a.duration == 0 then
 		if b.duration == 0 then
 			return a.name < b.name
@@ -191,10 +192,10 @@ local function filter_auras(container, cache)
 	local exit_first
 	
 	for index, entry in next, cache do
-		local filtered
+		local is_filtered
 		
-		if filter_conditions(entry) then
-			filtered = true
+		if entry.consolidate then
+			is_filtered = true
 			
 			if entry.duration > 30 then
 				local exit_time = entry.expiration - NOW - max(10, entry.duration / 10)
@@ -202,29 +203,27 @@ local function filter_auras(container, cache)
 				if exit_time > 0 then
 					exit_first = exit_first and min(exit_time, exit_first) or exit_time
 				else
-					filtered = false
+					is_filtered = false
 				end
 			end
 		end
 		
-		entry.filtered = filtered
+		entry.is_filtered = is_filtered
 		
-		if filtered then
+		if is_filtered then
 			counter = counter + 1
 		end
 	end
 	
-	container.exit_first = exit_first
-	return 1 < counter
+	return counter > 1 and counter, exit_first
 end
 
-local function update_auras(container, cache, filtered)
+local function update_auras(container, cache, is_filtered)
 	local index = 1
-	local visible = filtered and 1 or 0
+	local visible = is_filtered and 1 or 0
 	
 	while visible < container.max do
 		local entry = cache[index]
-		local button = container[visible + 1]
 		
 		if entry and (not filtered or not entry.filtered) then
 			button = button or create_button(container)
@@ -277,7 +276,6 @@ local function anchor_buttons(container, from, to)
 		
 		local col = (index - 1) % per_row
 		local row = floor((index - 1) / per_row)
-
 		button:SetPoint(anchor, col * size * dir_x, row * size * dir_y)
 	end
 end
@@ -299,7 +297,7 @@ local function update_container(container, cache)
 		sort(cache, container.sort)
 	end
 	
-	local visible = update_auras(container, cache, filtered)
+	local visible = update_auras(container, cache, container.has_filtered)
 	
 	resize_container(container, visible)
 	
@@ -322,20 +320,22 @@ local function update_object(object, cache)
 end
 
 local defaults = setmetatable({
-	size 				= 26,
+	size 				= 40,
 	spacing 			= 1,
 	anchor				= "bottomleft",
 	grow_x				= "right",
 	grow_y				= "up",
 	max 				= 24,
 	per_row				= 8,
-	border_color		= { 1,1,1 },
 	font				= "Fonts\\FRIZQT__.TTF",
 	font_size			= 10,
 	font_flags			= nil,
+	border_color		= { r = 1, g = 1, b = 1 },
 	debuff_coloring		= true,
 	sort				= sort_auras,
-	filter				= true,
+	filtering_enabled	= true,
+	mouseout_delay		= 2,
+	accent_expiring		= true,
 }, getmetatable(CreateFrame'Frame'))
 defaults.__index = defaults
 
