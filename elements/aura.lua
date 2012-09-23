@@ -186,33 +186,6 @@ local function create_button(container)
 	return button
 end
 
-local function enable_filter_button(container, num_filtered)
-	local button = container[1] or create_button(container)
-	
-	if container.debuff_coloring then
-		button.border:SetVertexColor(container.color.r, container.color.g, container.color.b)
-	end
-	
-	button.icon:SetTexture('Interface\\Icons\\Inv_misc_grouplooking')
-	button.count:SetText(num_filtered)
-	button.time:SetText()
-	button:Show()
-end
-
-local function sort_auras(a, b)
-	if a.duration == 0 then
-		if b.duration == 0 then
-			return a.name < b.name
-		else
-			return true
-		end
-	elseif b.duration == 0 then
-		return false
-	else
-		return a.expiration > b.expiration
-	end
-end
-
 local function filter_auras(container, cache)
 	local counter = 0
 	local exit_first
@@ -242,6 +215,33 @@ local function filter_auras(container, cache)
 	end
 	
 	return counter > 1 and counter, exit_first
+end
+
+local function enable_filter_button(container, num_filtered)
+	local button = container[1] or create_button(container)
+	
+	if container.debuff_coloring then
+		button.border:SetVertexColor(container.color.r, container.color.g, container.color.b)
+	end
+	
+	button.icon:SetTexture('Interface\\Icons\\Inv_misc_grouplooking')
+	button.count:SetText(num_filtered)
+	button.time:SetText()
+	button:Show()
+end
+
+local function sort_auras(a, b)
+	if a.duration == 0 then
+		if b.duration == 0 then
+			return a.name < b.name
+		else
+			return true
+		end
+	elseif b.duration == 0 then
+		return false
+	else
+		return a.expiration > b.expiration
+	end
 end
 
 local function update_auras(container, cache, is_filtered)
@@ -292,13 +292,6 @@ local function update_auras(container, cache, is_filtered)
 	return visible
 end
 
-local function resize_container(container, visible)
-	local width = min(container.per_row, visible) * (container.size + container.spacing) - container.spacing
-	local height = ceil(visible / container.per_row) * (container.size + container.spacing) - container.spacing
-	
-	container:SetSize(width, height)
-end
-
 local function anchor_buttons(container, from, to)
 	local size = container.size + container.spacing
 	local anchor = container.anchor
@@ -315,6 +308,13 @@ local function anchor_buttons(container, from, to)
 	end
 end
 
+local function resize_container(container, visible)
+	local width = min(container.per_row, visible) * (container.size + container.spacing) - container.spacing
+	local height = ceil(visible / container.per_row) * (container.size + container.spacing) - container.spacing
+	
+	container:SetSize(width, height)
+end
+
 local function update_container(container, event, cache)
 	if container.filtering_enabled then
 		if container.pause_filtering then
@@ -327,7 +327,7 @@ local function update_container(container, event, cache)
 			enable_filter_button(container, container.has_filtered)
 		end
 		
-		if container.pause_filtering or container.has_filtered then
+		if container.has_filtered or container.pause_filtering then
 			if not container:GetScript('OnUpdate') then
 				container:SetScript('OnUpdate', on_update_container)
 				container.mouseover_time, container.mouseout_time = 0, 0
