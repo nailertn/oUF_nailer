@@ -4,4 +4,6 @@
 elements\aura_cache.lua
 elements\aura.lua
 
-layout.lua
+shared.lua
+solo.lua
+group.lua
