@@ -38,6 +38,10 @@ oUF:Factory(function()
 end)
 
 function layout.update_groups()
+	if InCombatLockdown() then
+		return layout.event_frame:RegisterEvent'PLAYER_REGEN_ENABLED'
+	end
+	
 	local previous_group
 	for group_index, group in next, layout.groups do
 		if group_index > visible then
@@ -65,4 +69,9 @@ function layout.update_groups()
 			group:Show()
 		end
 	end
+end
+
+function layout.PLAYER_REGEN_ENABLED(event_frame, event)
+	event_frame:UnregisterEvent(event)
+	layout.update_groups()
 end
