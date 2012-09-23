@@ -5,7 +5,7 @@ local aura_cache = CreateFrame("Frame")
 local recycled, callback, throttle, buffs, debuffs, directory = {}, {}, {}, {}, {}, {}
 
 local function GetTable(cache, index)
-	local t = recycled[#recycled] or { ['1'] = nil, ['2'] = nil, ['3'] = nil, ['4'] = nil, ['5'] = nil, ['6'] = nil, ['7'] = nil, ['8'] = nil, ['9'] = nil }
+	local t = recycled[#recycled] or {}
 	recycled[#recycled] = nil
 	cache[index] = t
 	return t
