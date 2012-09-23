@@ -1,5 +1,6 @@
 ## Interface: 50001
 ## Dependencies: oUF
+## SavedVariables: oUF_nailer_saved_variables
 
 elements\aura_cache.lua
 elements\aura.lua

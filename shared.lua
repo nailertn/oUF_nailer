@@ -39,3 +39,11 @@ do
 
 	layout.event_frame = event_frame
 end
+
+local function get_saved_variables()
+	layout.event_frame:UnregisterEvent('ADDON_LOADED', get_saved_variables)
+	
+	layout.saved_variables = _G[layout_name .. '_saved_variables'] or {}
+	_G[layout_name .. '_saved_variables'] = layout.saved_variables
+end
+layout.event_frame:RegisterEvent('ADDON_LOADED', get_saved_variables)
