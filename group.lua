@@ -6,14 +6,15 @@ local function style(object, unit)
 	bg:SetTexture(0,0,0)
 end
 
-oUF:RegisterStyle(layout_name .. ' group style')
+oUF:RegisterStyle(layout_name .. ' group style', style)
 
 local width = 100
 local height = 70
 local offset = 4
+local visible = 5
 
 oUF:Factory(function()
-	oUF:SetActiveStyle(layout_name .. ' solo style')
+	oUF:SetActiveStyle(layout_name .. ' group style')
 	
 	layout.groups = {}
 	

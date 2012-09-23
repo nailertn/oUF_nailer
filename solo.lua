@@ -6,7 +6,7 @@ local function style(object, unit)
 	bg:SetTexture(0,0,0)
 end
 
-oUF:RegisterStyle(layout_name .. ' solo style')
+oUF:RegisterStyle(layout_name .. ' solo style', style)
 
 local width, height = 300, 30
 
