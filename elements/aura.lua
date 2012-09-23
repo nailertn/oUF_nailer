@@ -1,4 +1,4 @@
-layout_name, layout = ...
+local layout_name, layout = ...
 
 local NOW
 local GetTime = GetTime
@@ -258,7 +258,7 @@ local function update_auras(container, cache, is_filtered)
 				button = button or create_button(container)
 				
 				if container.debuff_coloring then
-					local color = DebuffTypeColor[entry.debuff_type] or container.border_color
+					local color = DebuffTypeColor[entry.debuff_type or 'none'] or container.border_color
 					button.border:SetVertexColor(color.r, color.g, color.b)
 				end
 				
