@@ -134,6 +134,12 @@ local function on_leave(button)
 	GameTooltip:Hide()
 end
 
+local function on_click(button)
+	if InCombatLockdown() then return end
+	
+	CancelUnitBuff(button.__owner.__owner.unit, button.index, button.__owner.type)
+end
+
 local function create_button(container)
 	container.created_buttons = (container.created_buttons or 0) + 1
 	
@@ -173,6 +179,9 @@ local function create_button(container)
 	button.UpdateTooltip = update_tooltip
 	button:SetScript('OnEnter', on_enter)
 	button:SetScript('OnLeave', on_leave)
+	
+	button:RegisterForClicks("RightButtonUp")
+	button:SetScript('OnClick', on_click)
 	
 	return button
 end
