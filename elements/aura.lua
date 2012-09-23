@@ -258,13 +258,13 @@ local function update_auras(container, cache, is_filtered)
 				button = button or create_button(container)
 				
 				if container.debuff_coloring then
-					local color = DebuffTypeColor[entry.debuff_type or 'none'] or container.border_color
+					local color = DebuffTypeColor[entry.debuff_type or 'none']
 					button.border:SetVertexColor(color.r, color.g, color.b)
 				end
 				
 				button.icon:SetTexture(entry.icon)
 				
-				button.count:SetText((entry.count or 0) > 1 and entry.count or nil)
+				button.count:SetText((entry.count or 0) > 1 and entry.count)
 				
 				if entry.duration > 0 then
 					start_timer(button, entry.expiration)
