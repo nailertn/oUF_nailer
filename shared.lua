@@ -1,5 +1,17 @@
 local layout_name, layout = ...
 
+layout.solid = "Interface\\Buttons\\WHITE8X8"
+layout.texture = "Interface\\AddOns\\" .. layout_name .. "\\media\\lyn"
+layout.backdrop = { bgFile = layout.solid, edgeFile = layout.solid, edgeSize = 1 }
+
+layout.font1 = "Interface\\AddOns\\" .. layout_name .. "\\media\\charriot_deluxe.ttf"
+layout.font1_size = 10
+layout.font1_flags = "OUTLINEMONOCHROME"
+
+layout.font2 = "Interface\\AddOns\\" .. layout_name .. "\\media\\tama_mini01.ttf"
+layout.font2_size = 20
+layout.font2_flags = "OUTLINEMONOCHROME"
+
 do
 	local event_frame = CreateFrame'Frame'
 	local registry = {}
