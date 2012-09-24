@@ -8,68 +8,47 @@ end
 
 oUF:RegisterStyle(layout_name .. ' group style', style)
 
-local width = 100
-local height = 70
-local offset = 4
-local visible = 5
+local width = 108
+local height = 48
+local offset = 1
 
-oUF:Factory(function()
-	oUF:SetActiveStyle(layout_name .. ' group style')
-	
-	layout.groups = {}
-	
-	for group_index = 1, NUM_RAID_GROUPS do
-		local group = oUF:SpawnHeader(nil, nil, nil,
-			'groupFilter', group_index,
-			'showSolo', true,
-			'showParty', true,
-			'showPlayer', true,
-			'showRaid', true,
-			'yOffset', -offset,
-			
-			'oUF-initialConfigFunction',
-				'self:SetWidth(' .. width .. ')' ..
-				'self:SetHeight(' .. height .. ')'
-		)
+local function spawn_layout(name, num, visibility)
+	oUF:Factory(function()
+		oUF:SetActiveStyle(layout_name .. ' group style')
 		
-		tinsert(layout.groups, group)
-	end
-	
-	layout.update_groups()
-end)
-
-function layout.update_groups()
-	if InCombatLockdown() then
-		return layout.event_frame:RegisterEvent('PLAYER_REGEN_ENABLED', layout.update_groups)
-	else
-		layout.event_frame:UnregisterEvent('PLAYER_REGEN_ENABLED', layout.update_groups)
-	end
-	
-	local previous_group
-	for group_index, group in next, layout.groups do
-		if group_index > visible then
-			group:Hide()
-		else
-			if previous_group then
-				group:SetPoint('topleft', previous_group, 'topright', offset, 0)
-			else
-				group:SetPoint('topleft', UIParent, 'bottom', -258, 470)
-			end
-			
-			group:SetAttribute('oUF-initialConfigFunction',
-				'self:SetWidth(' .. width .. ')' ..
-				'self:SetHeight(' .. height .. ')'
+		layout[name] = {}
+		
+		local last
+		local helper = CreateFrame('Frame', nil, UIParent)
+		helper:SetSize(width * num - (num - 1), height * 5 - (5 - 1))
+		helper:SetPoint('bottom', 0, 37)
+		
+		for index = 1, num do
+			local group = oUF:SpawnHeader(nil, nil, visibility,
+				'groupFilter', index,
+				'showSolo', true,
+				'showParty', true,
+				'showPlayer', true,
+				'showRaid', true,
+				'yOffset', offset,
+				
+				'oUF-initialConfigFunction',
+					'self:SetWidth(' .. width .. ')' ..
+					'self:SetHeight(' .. height .. ')'
 			)
 			
-			group:SetSize(width, (height + offset) * #group - offset)
-			
-			for child_index = 1, #group do
-				local child = group[child_index]
-				child:SetSize(width, height)
+			if last then
+				group:SetPoint('topleft', last, 'topright', -offset, 0)
+			else
+				group:SetPoint('topleft', helper, 'topleft')
 			end
 			
-			previous_group = group
+			tinsert(layout[name], group)
+			last = group
 			group:Show()
 		end
-	end
+	end)
 end
+
+spawn_layout('layout25', 5, 'custom [@raid26,exists] hide; show')
+spawn_layout('layout40', 8, 'custom [@raid26,exists] show; hide')
