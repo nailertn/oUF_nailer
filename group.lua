@@ -106,6 +106,9 @@ do
 	function grid_post_create_indicator(grid, indicator, id)
 		if id ~= 'center' then return end
 		
+		indicator.text:ClearAllPoints()
+		indicator.text:SetPoint("bottom", 2, -2)
+		
 		indicator:HookScript('OnShow', update_status_visibility)
 		indicator:HookScript('OnHide', update_status_visibility)
 		indicator.status = grid.__owner.status

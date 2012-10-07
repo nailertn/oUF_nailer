@@ -82,13 +82,7 @@ do
 		
 		if settings.text then
 			indicator.text = indicator:CreateFontString(nil, "OVERLAY")
-			
-			if id == "center" then
-				indicator.text:SetPoint("bottom", 2, -2)
-			else
-				indicator.text:SetPoint("center", 2, 2)
-			end
-			
+			indicator.text:SetPoint("center", 2, 2)
 			indicator.text:SetFont(grid.font, grid.font_size, grid.font_flags)
 		end
 		
