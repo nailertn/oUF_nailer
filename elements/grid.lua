@@ -105,8 +105,6 @@ do
 	end
 end
 
-local white = { 1, 1, 1 }
-
 local function init_indicators(grid, indicators, aura_cache)
 	NOW = GetTime()
 	
