@@ -1,17 +1,6 @@
-local layout_name, layout = ...
+layout_name, layout = ...
 
-layout.solid = "Interface\\Buttons\\WHITE8X8"
-layout.texture = "Interface\\AddOns\\" .. layout_name .. "\\media\\lyn"
-layout.backdrop = { bgFile = layout.solid, edgeFile = layout.solid, edgeSize = 1 }
-
-layout.font1 = "Interface\\AddOns\\" .. layout_name .. "\\media\\charriot_deluxe.ttf"
-layout.font1_size = 10
-layout.font1_flags = "OUTLINEMONOCHROME"
-
-layout.font2 = "Interface\\AddOns\\" .. layout_name .. "\\media\\tama_mini01.ttf"
-layout.font2_size = 20
-layout.font2_flags = "OUTLINEMONOCHROME"
-
+-- event dispatcher
 do
 	local event_frame = CreateFrame'Frame'
 	local registry = {}
@@ -52,6 +41,7 @@ do
 	layout.event_frame = event_frame
 end
 
+-- saved variables
 local function get_saved_variables()
 	layout.event_frame:UnregisterEvent('ADDON_LOADED', get_saved_variables)
 	
@@ -59,3 +49,20 @@ local function get_saved_variables()
 	_G[layout_name .. '_saved_variables'] = layout.saved_variables
 end
 layout.event_frame:RegisterEvent('ADDON_LOADED', get_saved_variables)
+
+-- media and settings
+layout.solid = "Interface\\Buttons\\WHITE8X8"
+layout.texture = "Interface\\AddOns\\" .. layout_name .. "\\media\\lyn"
+layout.backdrop = { bgFile = layout.solid, edgeFile = layout.solid, edgeSize = 1 }
+
+layout.font1 = "Interface\\AddOns\\" .. layout_name .. "\\media\\charriot_deluxe.ttf"
+layout.font1_size = 10
+layout.font1_flags = "OUTLINEMONOCHROME"
+
+layout.font2 = "Interface\\AddOns\\" .. layout_name .. "\\media\\tama_mini01.ttf"
+layout.font2_size = 20
+layout.font2_flags = "OUTLINEMONOCHROME"
+
+oUF.colors.disconnected = { 0.59, 0.04, 0.04 }
+
+layout.heal_threshold = 10000
