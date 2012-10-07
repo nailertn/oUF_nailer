@@ -18,7 +18,7 @@ do
 		NOW = GetTime()
 		
 		for indicator, expiration in next, to_update do
-			indicator:update(expiration)
+			indicator:update(expiration, NOW)
 		end
 		
 		if not next(to_update) then
