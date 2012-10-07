@@ -62,7 +62,7 @@ aura_cache:SetScript("OnUpdate", function(self, elapsed)
 end)
 
 local function UNIT_AURA(object, event, unit)
-	if unit ~= object.unit then return end
+	if object.unit ~= unit then return end
 	throttle[object] = unit
 	return aura_cache:Show()
 end
