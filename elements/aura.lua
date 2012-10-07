@@ -21,9 +21,9 @@ do
 		local value = expiration - NOW
 		
 		if value > 3600 then
-			button.time:SetFormattedText("%dh", ceil(value / 3600))
+			button.time:SetFormattedText('%dh', ceil(value / 3600))
 		elseif value > 60 then
-			button.time:SetFormattedText("%dm", ceil(value / 60))
+			button.time:SetFormattedText('%dm', ceil(value / 60))
 		elseif value > 9 then
 			button.time:SetText(ceil(value))
 		elseif value > 0 then
@@ -34,11 +34,11 @@ do
 			end
 			
 			if value > 6 then
-				button.time:SetFormattedText("|cffffff00%d", ceil(value))
+				button.time:SetFormattedText('|cffffff00%d', ceil(value))
 			elseif value > 3 then
-				button.time:SetFormattedText("|cffff8800%d", ceil(value))
+				button.time:SetFormattedText('|cffff8800%d', ceil(value))
 			else
-				button.time:SetFormattedText("|cffff0000%d", ceil(value))
+				button.time:SetFormattedText('|cffff0000%d', ceil(value))
 			end		
 		else
 			stop_timer(button)
@@ -126,7 +126,7 @@ local function update_tooltip(button)
 end
 
 local function on_enter(button)
-	GameTooltip:SetOwner(button, "ANCHOR_TOPLEFT")
+	GameTooltip:SetOwner(button, 'ANCHOR_TOPLEFT')
 	update_tooltip(button)
 end
 
@@ -379,12 +379,12 @@ end
 local defaults = setmetatable({
 	size 				= 40,
 	spacing 			= 1,
-	anchor				= "bottomleft",
-	grow_x				= "right",
-	grow_y				= "up",
+	anchor				= 'bottomleft',
+	grow_x				= 'right',
+	grow_y				= 'up',
 	max 				= 24,
 	per_row				= 8,
-	font				= "Fonts\\FRIZQT__.TTF",
+	font				= 'Fonts\\FRIZQT__.TTF',
 	font_size			= 10,
 	font_flags			= nil,
 	border_color		= { r = 1, g = 1, b = 1 },
@@ -438,4 +438,4 @@ local function disable_object(object)
 	end
 end
 
-oUF:AddElement("aura", nil, enable_object, disable_object)
+oUF:AddElement('aura', nil, enable_object, disable_object)
