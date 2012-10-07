@@ -93,14 +93,13 @@ if class == 'DRUID' then
 		color2 = { 0.50, 0.50, 0.00 },
 		color3 = { 0.50, 0.00, 0.00 },
 		update = 'mine',
-		fast_update = 'true',
-		update_indicator = function(handler, indicator, expiration, now)
-			local i, f = modf(expiration - now)
+		custom_update = function(indicator, expiration, now)
+			local int, fra = modf(expiration - now)
 		
 			if expiration - now < 1 then
-				indicator.text:SetFormattedText('.%d', f * 10)
+				indicator.text:SetFormattedText('.%d', fra * 10)
 			else
-				indicator.text:SetFormattedText('%d%d', i, f * 10)
+				indicator.text:SetFormattedText('%d%d', int, fra * 10)
 			end
 		end
 	}
