@@ -247,7 +247,7 @@ local function spawn_layout(name, num, visibility)
 		local last
 		local helper = CreateFrame('Frame', layout_name .. '_helper_' .. name, UIParent)
 		helper:SetSize(width * num - (num - 1), height * 5 - (5 - 1))
-		helper:SetPoint('bottom', 0, 37 + 150) -- !! +300-at kieszedni !!
+		helper:SetPoint('bottom', 0, 37)
 		
 		for index = 1, num do
 			local group = oUF:SpawnHeader(nil, nil, visibility,

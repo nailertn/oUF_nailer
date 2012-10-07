@@ -137,7 +137,6 @@ elseif class == 'MONK' then
 		end
 	}
 	
-	--healer[119607] = { indicator = 'topleft_1', priority = 50, color = { 0.75, 0.75, 0.00 }, count = 'mine', min_count = 1 } -- renewing mist spread
 	healer[115175] = { indicator = 'topright_1', priority = 50, color = { 0.00, 0.50, 0.50 }, update = 'mine' } -- soothing mist
 	healer[125950] = { indicator = 'topright_1', priority = 49, color = { 0.75, 0.75, 0.00 }, update = 'mine' } -- soothing mist replica
 elseif class == 'PALADIN' then
